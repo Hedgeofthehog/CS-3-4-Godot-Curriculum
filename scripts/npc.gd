@@ -3,17 +3,35 @@ class_name npc
 
 @onready var player: = %Player
 
-@export var health : int = 10
-@export var speed : int = 200
+@export var health : int = 100
+@export var speed : int = 100
 @export var is_hostile : bool = false
 @export var move_points : Array[Vector2] = []
 @export var move_point : int = 0
 @export var dialogue : Array[String] = []
 @export var inventory : Array[String] = []
 @export var inventory_drop : int = 0
+@export var maxHealth = 100
 #@export var state
 @export var type : String = ""
 @export var target : Vector2
+
+
+func change_health(_amount): 
+	health += _amount
+	if health > maxHealth:
+		health = maxHealth
+	if health <= 0:
+		queue_free()
+	print(health)
+	
+		
+		
+
+
+
+
+
 
 func _ready() -> void:
 	

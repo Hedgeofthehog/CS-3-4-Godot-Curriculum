@@ -1,6 +1,7 @@
 extends CharacterBody2D
 class_name Player
-
+@onready var attack_box: Area2D = $attack_box
+@onready var npc = $"../slime"
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -8,6 +9,7 @@ class_name Player
 @export var maxHealth : int = 10
 @export var health : int = maxHealth
 @export var coins : int = 0
+@export var col = false
 
 
 var facing: Vector2 = Vector2.ZERO
@@ -45,15 +47,19 @@ func handle_sprite(direction: Vector2) -> void:
 	
 	if facing.y > 0:
 		animated_sprite.play(prefix + "_forward")
+		attack_box.position=Vector2(0,30)
 	elif facing.y < 0:
 		animated_sprite.play(prefix + "_backward")
+		attack_box.position=Vector2(0,-30)
 	elif facing.x < 0:
 		animated_sprite.play(prefix + "_side")
 		animated_sprite.flip_h = true
+		attack_box.position=Vector2(-30,0)
 	elif facing.x > 0:
 		animated_sprite.play(prefix + "_side")
+		attack_box.position=Vector2(30,0)
 		animated_sprite.flip_h = false
-
+	
 func collect_pickup(_type : String, _amount : int):
 	if _type == "coin":
 		coins += _amount
@@ -78,8 +84,30 @@ func change_health(_amount):
 	print("Health: " + str(health))
 
 func die():
+	get_tree().reload
 	print("You died!")
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		get_tree().quit(0)
+	if event.is_action_pressed("atk"):
+		print("test1")
+		animated_sprite.play("attack")
+		if col == true: 
+			print("ay")
+			npc.change_health(-10)
+		
+
+
+func _on_attack_box_body_entered(body: Node2D) -> void:
+	print("attbox enetred")
+	if body == npc:
+		col = true
+		print("col is tru")
+
+
+
+
+func _on_attack_box_body_exited(body: Node2D) -> void:
+	if body == npc:
+		col = false

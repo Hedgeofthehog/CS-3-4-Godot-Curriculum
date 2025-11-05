@@ -17,7 +17,6 @@ func _on_body_entered(body):
 	# Check if it's the player and we can damage
 	if body is Player and can_damage:
 		print("Player touched spike! Dealing " + str(damage_amount) + " damage")
-		
 		if body.has_method("change_health"):
 			body.change_health(damage_amount)
 		
